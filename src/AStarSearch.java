@@ -1,6 +1,19 @@
 import java.awt.Point;
 import java.util.*;
 
+/**
+ * This class holds the A* Search algorithm. As the game only allows 4 directions
+ * of movement, it utilises the Manhattan heuristic. This code uses HashMaps to
+ * keep track of every point's f and g value. It is also used to keep track of
+ * the node it came from. In this code, the A* Search does not cut down any trees
+ * it sees in the first run. This is done so that the program does not recklessly
+ * cut down any trees it sees. Once the search is completed, it then runs a second
+ * search with the ability to cut down trees. This proved to be useful as there
+ * are cases where cut down trees, traveling over water to a point of no return.
+ * 
+ * @author Mendel Liang, Alexander Ong
+ */
+
 /*Derived from the wikipedia pseudocode on A* Search*/
 public class AStarSearch {
    
