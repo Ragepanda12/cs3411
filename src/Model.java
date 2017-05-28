@@ -518,6 +518,15 @@ public class Model {
             AStarSearch a = new AStarSearch(this.world, curr, p);
             a.aStar(this.haveAxe, this.haveKey, this.haveRaft);
             if(a.reachable()) {
+               return p;
+            }
+         }
+      }
+      return null;
+   }
+          
+ /*     Alternate method. Slower on real time, but more efficient on moves.         
+               
                distances.put(manhattanDistance(curr, p), p);
             }
          }
@@ -534,7 +543,7 @@ public class Model {
          }
          return(distances.get(smallest));
       }
-   }
+   }*/
   /**
     * Gives the next tile that should be explored when exploring water.
     * @param curr the current location of the AI
@@ -547,7 +556,14 @@ public class Model {
             AStarSearch a = new AStarSearch(this.world, curr, p);
             a.aStar(this.haveAxe, this.haveKey, this.haveRaft);
             if(a.reachable()) {
-               distances.put(manhattanDistance(curr, p), p);
+               return p;
+            }
+         }
+      }
+      return null;
+   }
+               
+               /*distances.put(manhattanDistance(curr, p), p);
             }
          }
       }
@@ -563,7 +579,7 @@ public class Model {
          }
          return(distances.get(smallest));
       }
-   }   
+   }   */
    /**
     * Returns whether the tile in front is a wall.
     * @param curr the current point
