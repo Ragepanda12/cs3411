@@ -1,6 +1,28 @@
 import java.awt.Point;
 import java.util.*;
 
+/**
+ * The decider class decides the agent's next action through the greedy method
+ * algorithm based on a priority list. The priority list is as follows:
+ * 1. Go back to base position if treasure is in hand
+ * 2. If the treasure is within sight, create a path to the treasure
+ * 3. Explore as much of the waters as possible while on a raft
+ * 4. Unlock any doors if the agent has a key
+ * 5. Pick up any important items if they are in sight and reach
+ * 6. Explore as much of the land as possible
+ * 7. Go to the waters if the agent has a raft
+ * 8. Use dynamite to clear walls for important items/pathways
+ * 
+ * The locations of these important items are kept in the Model.java using Point
+ * data structures. These are used in the CreatePathTo function which utilises
+ * A* Search to find the shortest path from the start to the goal. It then goes
+ * through that path and adds actions to the Queue, moveQueue. A* Search was 
+ * chosen as it was a fast and less memory intensive search algorithm, utilising
+ * the Manhattan heuristic as the game is a grid based game. 
+ * 
+ * @author Mendel Liang, Alexander Ong
+ */
+
 public class Decider {
    private Queue<Character> moveQueue;
    private Model model;
