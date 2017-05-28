@@ -9,6 +9,20 @@ import java.util.*;
 import java.io.*;
 import java.net.*;
 
+/**
+ * This is a gaming AI where the agent must traverse through land and water
+ * to find the treasure. Once found, the agent must return back to its starting
+ * point to win the game. The AI is a greedy based AI which gets its list of
+ * actions based on a priority list found in Decider.java. This decision is
+ * based off information held in the model class which holds information like
+ * where important items are and information about its surroundings. Once a
+ * decision on where to go is made, it uses A* Search to find the optimal path
+ * to the goal utilising the Manhattan heuristic as the game only allows 4
+ * directions of movement.
+ * 
+ * @author Mendel Liang, Alexander Ong
+ */
+
 public class Agent {
    private Decider decider;
    public Agent() {
