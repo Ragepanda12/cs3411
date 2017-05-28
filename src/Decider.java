@@ -109,11 +109,16 @@ public class Decider {
          //Check wall if blowable
          //Blow up wall
          //============FIX LOGIC=====================//
-         if(model.numDynamites() > 0 && model.frontTileIsWall(model.getLoc())) {
-            System.out.println("Front is a wall");
-            moveQueue.add(Model.USE_DYNAMITE);
+         if(createPathTo(model.getLoc(), model.nearestPointLeastObstaclesSurrounding(model.getTreasureLoc()))) {
+            if(model.numDynamites() > 0 && model.frontTileIsWall(model.getLoc())) {
+               int dir = whatDirection(model.getLoc(), model.getTreasureLoc());
+               moveQueue.addAll(getTurnMoves(model.getDirection(), dir));
+               moveQueue.add(Model.USE_DYNAMITE);
+               break;
+            }
             break;
          }
+
          
       }
       move = moveQueue.poll();

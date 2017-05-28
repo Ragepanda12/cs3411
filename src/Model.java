@@ -394,6 +394,65 @@ public class Model {
              (tile == DOOR && haveKey) 
             );
    }
+   public static boolean canBeBlownUp(char tile) {
+      return ((tile == WALL) ||
+            (tile == DOOR) ||
+            (tile == TREE));
+   }
+   public Point nearestPointLeastObstaclesSurrounding(Point p) {
+      int[] obstacles = new int[4];
+      for(int i = 0; i < 4; i++) {
+         int x = (int)p.getX();
+         int y = (int)p.getY();
+         switch(i) {
+            case UP:
+               y += 1;
+               break;
+            case RIGHT:
+               x += 1;
+               break;
+            case DOWN:
+               y -= 1;
+               break;
+            case LEFT:
+               x -= 1;
+               break;
+         }
+         Point next = new Point(x,y);
+         boolean passable = false;
+         while(!passable) {
+            if(canBeBlownUp(world.get(next))) {
+               obstacles[i] ++;
+            }
+            else {
+               passable = true;
+            }
+         }
+      }
+      int smallest = obstacles[0];
+      for(int i : obstacles) {
+         if(i < smallest) {
+            i = smallest;
+         }
+      }
+      int x = (int)p.getX();
+      int y = (int)p.getY();
+      switch(smallest) {
+         case UP:
+            y += 1;
+            break;
+         case RIGHT:
+            x += 1;
+            break;
+         case DOWN:
+            y -= 1;
+            break;
+         case LEFT:
+            x -= 1;
+            break;
+      }
+      return new Point(x,y);
+   }
    
    public Point nearestReachableRevealingTile(Point curr) {
       HashMap<Integer, Point> distances = new HashMap<>();
