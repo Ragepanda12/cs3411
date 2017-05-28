@@ -1,6 +1,23 @@
 import java.awt.Point;
 import java.util.*;
 
+/**
+ * The model class holds the model of the map. Here it stores important
+ * information for the game, including number of dynamites holding and
+ * where the important items are located. It also holds methods in relation
+ * to the map such as what is the front tile's type, whether it is a wall or
+ * water, and methods that return the nearest reachable tile, land or water. 
+ * 
+ * This class utilises linked lists of points to store locations of important
+ * items and the agent's location where the items are visible. It also uses
+ * boolean to keep track whether it has these important items like axe or key. 
+ * As the map is stored in ASCII, the model class uses a 2x2 array of char
+ * to represent the map of the game. A 2x2 array becomes easier to use as the
+ * program uses the Point data structure to keep track of locations.
+ * 
+ * @author Mendel Liang, Alexander Ong
+ */
+
 public class Model {
    
    
