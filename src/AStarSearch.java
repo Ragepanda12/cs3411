@@ -76,6 +76,9 @@ public class AStarSearch {
             if(visited.contains(nextTile)) {
                continue;
             }
+            if(this.world.get(start) == Model.WATER && this.world.get(goal) == Model.WATER && this.world.get(nextTile) != Model.WATER) {
+               continue;
+            }
             //Try to find a path without cutting down a tree first.
             if(needToCutTree == true) {
                if (!Model.canPotentiallyMoveOntoTile(world.get(nextTile), haveAxe, haveKey, haveRaft )) {

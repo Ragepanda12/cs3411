@@ -16,13 +16,6 @@ public class Decider {
       char move = 'r';
       
       while(moveQueue.isEmpty()) {
-      //what do we do?  
-    	 /*
-    	 //Priority 0: Win condition
-         if(model.haveTreasure() && model.getLoc() == new Point(0,0)){
-            System.out.println("Mission completed. Game Over");
-            System.exit(0);
-         }*/
     	  
     	 //Priority 1: Have Gold, go back to base position (0,0)
          //But we might not be able to be cause we don't have a raft anymore

@@ -15,12 +15,7 @@ public class Model {
    final static int RIGHT = 1;
    final static int DOWN = 2;
    final static int LEFT = 3;
-   
-   final static char DIRECTION_UP = '^';
-   final static char DIRECTION_RIGHT = '>';
-   final static char DIRECTION_DOWN = 'v';
-   final static char DIRECTION_LEFT = '<';
-   
+
    final static char PLAIN = ' ';
    final static char TREE = 'T';
    final static char DOOR = '-';
@@ -112,8 +107,6 @@ public class Model {
             this.world.put(new Point(x,y), UNEXPLORED);
          }
       }
-      //We start looking downwards. I think?
-      this.world.put(new Point(0,0), DIRECTION_DOWN);
    }
    
    public boolean haveAxe() {
@@ -212,23 +205,7 @@ public class Model {
             char currTile = view[i][j];
             int currX = xLoc + (j-2);
             int currY = yLoc + (2-i);
-            
-            if(i == 2 && j == 2) {
-               switch(direction) {
-                  case UP:
-                     currTile = DIRECTION_UP;
-                     break;
-                  case RIGHT:
-                     currTile = DIRECTION_RIGHT;
-                     break;
-                  case DOWN:
-                     currTile = DIRECTION_DOWN;
-                     break;
-                  case LEFT:
-                     currTile = DIRECTION_LEFT;
-                     break;
-               }
-            }
+
             Point tile = new Point(currX, currY);
             Point curr = new Point(xLoc, yLoc);
             
@@ -273,6 +250,7 @@ public class Model {
             visited.add(getLoc());
          }
       }
+      world.put(getLoc(), currentTerrain);
       //showMap();
    }
    
@@ -402,11 +380,7 @@ public class Model {
              (tile == AXE) ||
              (tile == KEY) ||
              (tile == DYNAMITE) ||
-             (tile == TREASURE) ||
-             (tile == DIRECTION_UP) ||
-             (tile == DIRECTION_LEFT) ||
-             (tile == DIRECTION_RIGHT) ||
-             (tile == DIRECTION_DOWN)
+             (tile == TREASURE) 
             );
    }
    public static boolean canPotentiallyMoveOntoTile(char tile, boolean haveAxe, boolean haveKey, boolean haveRaft) {
@@ -415,65 +389,12 @@ public class Model {
              (tile == KEY) ||
              (tile == DYNAMITE) ||
              (tile == TREASURE) ||
-             (tile == DIRECTION_UP) ||
-             (tile == DIRECTION_LEFT) ||
-             (tile == DIRECTION_RIGHT) ||
-             (tile == DIRECTION_DOWN) ||
              (tile == TREE && haveAxe) ||
              (tile == WATER && haveRaft) ||
-             (tile == DOOR && haveKey) /*||
-             (tile == WALL && haveDynamite) still thinking about when to use dynamite*/
+             (tile == DOOR && haveKey) 
             );
    }
-   //Returns the nearest reachable point that can reveal any ?. null if there are no ?'s
-   /*public Point nearestReachableRevealingTile(Point curr) {
-      //Search outwards in squares
-      int x = (int) curr.getX();
-      int y = (int) curr.getY();
-      for(int i = 1; i < MAXIMUM_X/2; i++) {
-         for(int x1 = -i; x1 < i; x1++) {
-            for(int y1 = -i; y1 < i; y1++) {
-               Point currPoint = new Point(x+x1, y+y1);
-               if(world.containsKey(currPoint)) {
-                  if(world.get(currPoint) != Model.UNEXPLORED) {
-                     if(canSeeUnknowns(currPoint)) {
-                        AStarSearch a = new AStarSearch(this.world, curr, currPoint);
-                        a.aStar(this.haveAxe, this.haveKey, this.haveRaft);
-                        if(a.reachable()) {
-                           return currPoint;
-                        }
-                     }
-                  }
-               }
-            }
-         }
-      }
-      return null;
-   } */
- /*  public Point nearestReachableRevealingTile(Point curr) {
-      HashMap<Double, Point> distances = new HashMap<>();
-      for(Point p : this.world.keySet()) {
-         if(!visited.contains(p) && world.get(p) != UNEXPLORED && canPotentiallyMoveOntoTile(world.get(p), this.haveAxe, this.haveKey, this.haveRaft)) {
-            AStarSearch a = new AStarSearch(this.world, curr, p);
-            a.aStar(this.haveAxe, this.haveKey, this.haveRaft);
-            if(a.reachable()) {
-               distances.put( Math.sqrt( Math.abs((curr.getX() - p.getX())) + Math.abs((curr.getY() - p.getY())) ), p);
-            }
-         }
-      }
-      if(distances.isEmpty()) {
-         return null;
-      }
-      else {
-         Double smallest = 9999999.0;
-         for(Double d : distances.keySet()) {
-            if ( d < smallest) {
-               smallest = d;
-            }
-         }
-         return (distances.get(smallest));
-      }
-   }*/
+   
    public Point nearestReachableRevealingTile(Point curr) {
       HashMap<Integer, Point> distances = new HashMap<>();
       for(Point p : this.world.keySet()) {
