@@ -44,7 +44,15 @@ public class AStarSearch {
          return fScore.get(a) - fScore.get(b);
       }
    }
-   
+   /**
+    * This must be called before using any other functions for this class.
+    * Populates the 'cameFrom' HashMap with the shortest distance predecessor tile.
+    * Runs once without the ability to cut trees
+    * If no path is found, the search is run again with the ability to cut trees.
+    * @param haveAxe a boolean which reflects whether the AI has an axe
+    * @param haveKey a boolean which reflects whether the AI has a key
+    * @param haveRaft a boolean which reflects wether the AI has a raft
+    */
    public void aStar(boolean haveAxe, boolean haveKey, boolean haveRaft){
       PriorityQueue<Point> pq = new PriorityQueue<Point>(11, new FComparator());
       
@@ -120,8 +128,12 @@ public class AStarSearch {
          aStar(haveAxe, haveKey, haveRaft);
       }
    }
-   //Call this after calling aStar to get a linked list containing the path from start to goal
-   //Returns empty linked list if there is no path
+   /**
+    * Called to get the path from start to goal, in correct order.
+    *
+    * @return a linked list containing the path from the start to the finish, if it exists.
+    * Otherwise returns an empty list.
+    */
    public LinkedList<Point> reconstructPath(){
       LinkedList<Point> path = new LinkedList<Point>();
       Point curr = goal;
@@ -131,11 +143,20 @@ public class AStarSearch {
       }
       return path;
    }
-   
+   /**
+    * A reachability tester for whether it is possible to go from start to goal.
+    * @return a boolean stating whether it is possible to travel from start to goal.
+    */
    public boolean reachable() {
       return (cameFrom.get(goal) != null);
    }
-   
+   /**
+    * The heuristic used for this search. Manhattan distance is commonly used in cases where
+    * the unit can only move in 4 directional space.
+    * @param start is the start Point
+    * @param goal is the goal Point
+    * @return the length + height of the triangle made from constructing a right angle triangle out of these two points
+    */
    private int manhattanDistance(Point start, Point goal) {
       return Math.abs((int)start.getX() - (int)goal.getX()) + Math.abs((int)start.getY() - (int)goal.getY());
    }

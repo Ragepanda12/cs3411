@@ -11,9 +11,7 @@ import java.util.*;
  * This class utilises linked lists of points to store locations of important
  * items and the agent's location where the items are visible. It also uses
  * boolean to keep track whether it has these important items like axe or key. 
- * As the map is stored in ASCII, the model class uses a 2x2 array of char
- * to represent the map of the game. A 2x2 array becomes easier to use as the
- * program uses the Point data structure to keep track of locations.
+ * 
  * 
  * @author Mendel Liang, Alexander Ong
  */
@@ -125,7 +123,7 @@ public class Model {
          }
       }
    }
-   
+   //A massive amount of getters
    public boolean haveAxe() {
       return haveAxe;
    }
@@ -195,7 +193,10 @@ public class Model {
    public char getCurrentTerrain() {
       return this.currentTerrain;
    }
-   
+   /**
+    * Updates the information stored in model based on the information given in the 5x5 view.
+    * @param view is what the AI can 'see' at the current turn
+    */
    public void update(char view[][]) {
       //We need to rotate the view we're given so that it's the same orientation as our original map.
       int rotationsRequired = 0;
@@ -270,7 +271,11 @@ public class Model {
       world.put(getLoc(), currentTerrain);
       //showMap();
    }
-   
+   /**
+    * Rotates the given 2d array map such that it matches the orientation of our original map
+    * @param map is the 5x5 view seen by the AI
+    * @return the same 2d array rotated accordingly.
+    */
    private static char[][] rotateMap(char[][] map){
       int x = map.length;
       int y = map[0].length;
@@ -282,8 +287,11 @@ public class Model {
       }
       return rotatedMap;
    }
-   //Update after the user has input a move...update inventory/change map rep
-   //E.g cut a tree, has raft, or stepped off raft, doesn't have raft anymore.
+   /**
+    * Updates the model after the AI has input a move.
+    * Handles trees/doors/walls being removed and adds/removes inventory as required
+    * @param move the move that is about to be made
+    */
    public void updateMove(char move) {
       Point currTile = new Point(this.xLoc, this.yLoc);
       char frontTile = world.get(frontTile(currTile));
@@ -366,12 +374,16 @@ public class Model {
             this.doors.remove(frontTile(currTile));
             break;
          case 'B':
-            frontTile = PLAIN;
+            world.put(frontTile(currTile), PLAIN);
             numDynamites -= 1;
             break;
       }
    }
-   //Get the tile in front of us
+   /**
+    * Gets the tile in front of the given tile in the appropriate direction
+    * @param tile is the tile we want the tile in front of of
+    * @return the tile in front of the given tile
+    */
    public Point frontTile(Point tile) {
       int x = (int) tile.getX();
       int y = (int) tile.getY();
@@ -392,6 +404,11 @@ public class Model {
       }
       return new Point(x,y);
    }
+   /**
+    * Tiles we can move onto without any tools.
+    * @param tile is the tile we want to move onto
+    * @return whether or not it is possible to move onto that tile without tools
+    */
    public static boolean canMoveOntoTile(char tile) {
       return((tile == PLAIN) ||
              (tile == AXE) ||
@@ -400,6 +417,14 @@ public class Model {
              (tile == TREASURE) 
             );
    }
+   /**
+    * Tiles we can move onto with given tools.
+    * @param tile the tile we want to move onto
+    * @param haveAxe whether we have an axe or not
+    * @param haveKey whether we have a key or not
+    * @param haveRaft whether we have a raft or not
+    * @return whether we can move onto that tile with the appropriate tools
+    */
    public static boolean canPotentiallyMoveOntoTile(char tile, boolean haveAxe, boolean haveKey, boolean haveRaft) {
       return((tile == PLAIN) ||
              (tile == AXE) ||
@@ -411,11 +436,22 @@ public class Model {
              (tile == DOOR && haveKey) 
             );
    }
+   /**
+    * Tiles that can be removed by using Dynamite
+    * @param tile the tile to be checked for removal
+    * @return whether the tile can be removed via dynamite
+    */
    public static boolean canBeBlownUp(char tile) {
       return ((tile == WALL) ||
             (tile == DOOR) ||
             (tile == TREE));
    }
+   /**
+    * Finds the nearest point to the given point that can be moved to without the usage of dynamite.
+    * Used to find the most efficient spot to start dynamiting from (since there are less obstacles)
+    * @param p the point to be traveled to
+    * @return the nearest point to the given point which can be reached without dynamite
+    */
    public Point nearestPointLeastObstaclesSurrounding(Point p) {
       int[] obstacles = new int[4];
       for(int i = 0; i < 4; i++) {
@@ -470,7 +506,11 @@ public class Model {
       }
       return new Point(x,y);
    }
-   
+   /**
+    * Gives the next tile that should be explored when exploring.
+    * @param curr the current location of the AI
+    * @return the next point that should be explored
+    */
    public Point nearestReachableRevealingTile(Point curr) {
       HashMap<Integer, Point> distances = new HashMap<>();
       for(Point p : this.world.keySet()) {
@@ -495,7 +535,11 @@ public class Model {
          return(distances.get(smallest));
       }
    }
-   //Same as above but usage for when we are on water and don't want to step off water until exhaustively searched
+  /**
+    * Gives the next tile that should be explored when exploring water.
+    * @param curr the current location of the AI
+    * @return the next point that should be explored
+   */
    public Point nearestReachableRevealingWaterTile(Point curr) {
       HashMap<Integer, Point> distances = new HashMap<>();
       for(Point p : this.world.keySet()) {
@@ -520,7 +564,11 @@ public class Model {
          return(distances.get(smallest));
       }
    }   
-   //Returns whether the front tile is a wall
+   /**
+    * Returns whether the tile in front is a wall.
+    * @param curr the current point
+    * @return whether the wall in front is a wall.
+    */
    public boolean frontTileIsWall(Point curr) {
       char frontTile = world.get(frontTile(curr));
       if(frontTile == WALL){
@@ -528,7 +576,11 @@ public class Model {
       }
       return false;
    }
-   
+   /**
+    * Checks whether an item is blocked by a wall
+    * @param curr is the tile of the item
+    * @return whether the item is blocked by a wall
+    */
    public boolean wallBlocksItem(Point curr) {
       int x = (int) curr.getX();
       int y = (int) curr.getY();
@@ -546,8 +598,12 @@ public class Model {
       }
       return false;
    }
-   
-   private boolean canSeeUnknowns(Point curr) {
+   /**
+    * Determines whether a point can see any unexplored tiles.
+    * @param curr is the point to be tested for being able to see any unexplored locations
+    * @return whether the point can see any unexplored locations
+    */
+   /*private boolean canSeeUnknowns(Point curr) {
       boolean canSee = false;
       for(int i = -2; i <= 2; i++) {
          for(int j = -2; j <= 2; j++) {
@@ -562,8 +618,10 @@ public class Model {
       }
       
       return canSee;
-   }
-   
+   }*/
+   /**
+    * Prints out an area of the map. Used for debugging the model.
+    */
    public void showMap() {
       System.out.println(xLoc);
       System.out.println(yLoc);
@@ -575,6 +633,12 @@ public class Model {
          System.out.println();
       }
    }
+   /**
+    * A private helper function for determining which tile is nearest.
+    * @param start is the point from which we are travelling
+    * @param goal is the point we are travelling to
+    * @return the manhattan distance between these points.
+    */
    private int manhattanDistance(Point start, Point goal) {
       return Math.abs((int)start.getX() - (int)goal.getX()) + Math.abs((int)start.getY() - (int)goal.getY());
    }

@@ -3,6 +3,25 @@
  *  Sample Agent for Text-Based Adventure Game
  *  COMP3411 Artificial Intelligence
  *  UNSW Session 1, 2017
+ *  
+ *  Our AI works by utilising a greedy search method.
+ *  At any given point, the AI is either moving to a new location,
+ *  or running a greedy search based on a priority list to fill a
+ *  queue of moves which is completely followed before searching
+ *  for the next optimal move at the time.
+ *  
+ *  For searching from one point to another, we decided to use A*
+ *  search, which was adapted from code from Wikipedia.
+ *  Decider.java holds the main decision making code.
+ *  Model.java holds information about the world required to make a decision.
+ *  AStarSearch.java holds the methods for performing A* search as well as
+ *  reachabiity tests.
+ *  
+ *  For the design of our 'priority list', we chose to use a while loop
+ *  with if conditions for each priority. Essentially, if we can create
+ *  a path from the current location to the goal, then we use 'break' to
+ *  break out of the otherwise infinite loop and then perform the moves.
+ *  
 */
 
 import java.util.*;
@@ -122,7 +141,7 @@ public class Agent {
                   }
                }
             }
-            agent.print_view( view ); // COMMENT THIS OUT BEFORE SUBMISSION
+            //agent.print_view( view ); // COMMENT THIS OUT BEFORE SUBMISSION
             action = agent.get_action( view );
             out.write( action );
          }

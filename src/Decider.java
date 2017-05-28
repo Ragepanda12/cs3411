@@ -32,7 +32,13 @@ public class Decider {
       this.moveQueue = new LinkedList<Character>();
       this.model = new Model();
    }
-   
+ /**
+  * make_decision firstly updates the world model, and then makes decisions
+  * based on what it can see from all the information gathered so far.
+  * 
+  * @param view is the given 5x5 grid from the limited view
+  * @return the move to be made
+  */
    public char make_decision( char view[][] ) {
       this.model.update(view);
       char move = 'r';
@@ -99,11 +105,9 @@ public class Decider {
                break;
             } 
          }
-         
-         //This one should probably be lower priority because we might have to cut a tree to move forward into an area
+         //Lower priority for cutting trees as we may want to avoid cutting trees in order to make a return trip
          if(((!model.haveRaft()) && (!model.getTreeLocs().isEmpty()))) {
             if(createPathTo(model.getLoc(), model.getTreeLocs().peek())) {
-               System.out.println("Found Tree");
                model.getTreeLocs().poll();
                moveQueue.add(Model.CHOP_TREE);
                break;
@@ -130,7 +134,6 @@ public class Decider {
          //Look for important items behind wall
          //Check wall if blowable
          //Blow up wall
-         //============FIX LOGIC=====================//
          if(createPathTo(model.getLoc(), model.nearestPointLeastObstaclesSurrounding(model.getTreasureLoc()))) {
             if(model.numDynamites() > 0 && model.frontTileIsWall(model.getLoc())) {
                int dir = whatDirection(model.getLoc(), model.getTreasureLoc());
@@ -145,12 +148,16 @@ public class Decider {
       }
       move = moveQueue.poll();
       this.model.updateMove(move);
-      System.out.println(move);
-      model.showMap();
       return move;
    }
 
-   
+   /**
+    * Attempts to create a path to a point given a starting point.
+    * Will add the moves to the moveQueue if successful
+    * @param from is the starting point
+    * @param to is the endpoint
+    * @return a boolean reflecting whether or not it was possible to create a path to the goal from start
+    */
    private boolean createPathTo(Point from, Point to) {
       AStarSearch a = new AStarSearch(model.getWorld(), from, to);
       a.aStar(model.haveAxe(), model.haveKey(), model.haveRaft());
@@ -176,6 +183,12 @@ public class Decider {
       }
       return success;
    }
+   /**
+    * Gets the minimal amount of moves required to turn to a given direction from a given direction
+    * @param currDirection direction to turning from
+    * @param nextDirection direction to turning to
+    * @return A linked list containing the moves required to turn to the desired direction.
+    */
    private LinkedList<Character> getTurnMoves(int currDirection, int nextDirection){
       LinkedList<Character> turns = new LinkedList<Character>();
       if(currDirection == nextDirection) {
@@ -216,7 +229,12 @@ public class Decider {
       }
       return turns;
    }
-   
+   /**
+    * Gives the direction of one point relative to another
+    * @param curr is 'source' point
+    * @param next is the point of which we want to know the direction of
+    * @return the direction as an int, which is decipherable given the definitions in model.
+    */
    private int whatDirection(Point curr, Point next) {
       int x = (int) (next.getX() - curr.getX());
       int y = (int) (next.getY() - curr.getY());
